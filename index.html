@@ -2,19 +2,59 @@
 <html>
 <head>
   <title>Motivation App</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin-top: 100px;
+      background: #111;
+      color: white;
+    }
+
+    button {
+      padding: 15px 25px;
+      margin: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .trading { background: orange; }
+    .general { background: green; }
+    .spiritual { background: blue; }
+
+    #quote {
+      margin-top: 40px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>Motivation App</h1>
+<h1>🔥 Motivation App</h1>
 
-<button onclick="showText()">Click Me</button>
+<button class="trading" onclick="getQuote('Trading')">Trading</button>
+<button class="general" onclick="getQuote('General')">General</button>
+<button class="spiritual" onclick="getQuote('Spiritual')">Spiritual</button>
 
-<p id="demo"></p>
+<div id="quote">Click button to get quote</div>
 
 <script>
-function showText() {
-  document.getElementById("demo").innerText = "App working properly 🚀";
+const API_URL = "https://script.google.com/macros/s/AKfycbxPC4MKX2EohnSOZDo58uOPpoWEzLh_J_8l1IpRkPFf9PNDqvMVm0NqSmFsKREeWLgp/exec";
+
+function getQuote(sheetName) {
+  fetch(`${API_URL}?sheet=${sheetName}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("quote").innerText = data.quote;
+    })
+    .catch(err => {
+      document.getElementById("quote").innerText = "Error loading quote!";
+      console.error(err);
+    });
 }
 </script>
 
