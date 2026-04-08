@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Motivation App</title>
+  <style>
+    body {
+      font-family: Arial;
+      text-align: center;
+      margin-top: 100px;
+    }
+    button {
+      padding: 15px 25px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #quote {
+      margin-top: 30px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>🔥 Motivation App</h1>
+
+<button onclick="getQuote('Trading')">Trading Motivation</button>
+<button onclick="getQuote('General')">General Motivation</button>
+<button onclick="getQuote('Spiritual')">Spiritual Thoughts</button>
+
+<div id="quote"></div>
+
+<script>
+const API_URL = "https://script.google.com/macros/s/AKfycbxPC4MKX2EohnSOZDo58uOPpoWEzLh_J_8l1IpRkPFf9PNDqvMVm0NqSmFsKREeWLgp/exec";
+
+function getQuote(sheetName) {
+  fetch(`${API_URL}?sheet=${sheetName}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("quote").innerText = data.quote;
+    });
+}
+</script>
+
+</body>
+</html>
