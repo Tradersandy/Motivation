@@ -1,33 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Motivation App</title>
+
   <style>
     body {
-      font-family: Arial;
-      text-align: center;
-      margin-top: 100px;
-      background: #111;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
       color: white;
+      text-align: center;
     }
 
-    button {
-      padding: 15px 25px;
-      margin: 10px;
+    h1 {
+      padding: 20px;
+      font-size: 22px;
+    }
+
+    .container {
+      padding: 15px;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
       font-size: 16px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .trading { background: #f59e0b; }
+    .general { background: #22c55e; }
+    .spiritual { background: #3b82f6; }
+
+    #quoteBox {
+      margin-top: 25px;
+      padding: 20px;
+      background: #1e293b;
+      border-radius: 15px;
+      font-size: 18px;
+      line-height: 1.5;
+      min-height: 120px;
+    }
+
+    .next-btn {
+      margin-top: 15px;
+      padding: 12px;
+      width: 100%;
       border-radius: 10px;
       border: none;
-      cursor: pointer;
-    }
-
-    .trading { background: orange; }
-    .general { background: green; }
-    .spiritual { background: blue; }
-
-    #quote {
-      margin-top: 40px;
-      font-size: 22px;
-      font-weight: bold;
+      background: #e11d48;
+      color: white;
+      font-size: 15px;
     }
   </style>
 </head>
@@ -36,23 +64,53 @@
 
 <h1>🔥 Motivation App</h1>
 
-<button class="trading" onclick="getQuote('Trading')">Trading</button>
-<button class="general" onclick="getQuote('General')">General</button>
-<button class="spiritual" onclick="getQuote('Spiritual')">Spiritual</button>
+<div class="container">
 
-<div id="quote">Click button to get quote</div>
+  <button class="btn trading" onclick="setCategory('Trading')">
+    📈 Trading Motivation
+  </button>
+
+  <button class="btn general" onclick="setCategory('General')">
+    💪 General Motivation
+  </button>
+
+  <button class="btn spiritual" onclick="setCategory('Spiritual')">
+    🧘 Spiritual Thoughts
+  </button>
+
+  <div id="quoteBox">
+    Tap any button to get motivation 🚀
+  </div>
+
+  <button class="next-btn" onclick="getQuote()">
+    🔁 Next Quote
+  </button>
+
+</div>
 
 <script>
 const API_URL = "https://script.google.com/macros/s/AKfycbxPC4MKX2EohnSOZDo58uOPpoWEzLh_J_8l1IpRkPFf9PNDqvMVm0NqSmFsKREeWLgp/exec";
 
-function getQuote(sheetName) {
-  fetch(`${API_URL}?sheet=${sheetName}`)
+let currentCategory = "";
+
+function setCategory(category) {
+  currentCategory = category;
+  getQuote();
+}
+
+function getQuote() {
+  if (!currentCategory) {
+    document.getElementById("quoteBox").innerText = "Please select category first!";
+    return;
+  }
+
+  fetch(`${API_URL}?sheet=${currentCategory}`)
     .then(res => res.json())
     .then(data => {
-      document.getElementById("quote").innerText = data.quote;
+      document.getElementById("quoteBox").innerText = data.quote;
     })
     .catch(err => {
-      document.getElementById("quote").innerText = "Error loading quote!";
+      document.getElementById("quoteBox").innerText = "Error loading quote!";
       console.error(err);
     });
 }
