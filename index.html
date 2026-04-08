@@ -1,105 +1,97 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Motivation App</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Motivation App</title>
 
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      text-align: center;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
 
-    h1 {
-      padding: 20px;
-      font-size: 22px;
-    }
-
-    .container {
-      padding: 15px;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 15px;
-      margin: 10px 0;
-      font-size: 16px;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .trading { background: #f59e0b; }
-    .general { background: #22c55e; }
-    .spiritual { background: #3b82f6; }
-
-    #quoteBox {
-  margin-top: 25px;
+/* HOME SCREEN */
+#home {
   padding: 20px;
+}
+
+.btn {
+  width: 100%;
+  padding: 18px;
+  margin: 12px 0;
+  font-size: 16px;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+}
+
+.trading { background: orange; }
+.general { background: green; }
+.spiritual { background: blue; }
+
+/* QUOTE SCREEN */
+#quoteScreen {
+  display: none;
+  padding: 20px;
+}
+
+#quoteBox {
+  margin-top: 40px;
+  padding: 25px;
   background: #1e293b;
   border-radius: 15px;
-  font-size: 18px;
+  font-size: 20px;
   line-height: 1.6;
-
-  /* IMPORTANT CHANGES */
-  min-height: 120px;
-  height: auto;              /* auto expand */
-  word-wrap: break-word;     /* long text wrap */
-  overflow-wrap: break-word; /* mobile support */
 }
-    }
 
-    .next-btn {
-  margin-top: 20px;
-  padding: 18px;            /* height वाढली */
+/* BUTTONS */
+.next-btn {
+  margin-top: 25px;
+  padding: 18px;
   width: 100%;
-  border-radius: 14px;
+  border-radius: 12px;
   border: none;
   background: #e11d48;
   color: white;
-
-  font-size: 18px;          /* text मोठा */
+  font-size: 18px;
   font-weight: bold;
-
-  cursor: pointer;
-
-  /* mobile click feel */
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
-    }
-  </style>
+
+.back-btn {
+  margin-top: 10px;
+  padding: 12px;
+  width: 100%;
+  border-radius: 10px;
+  border: none;
+  background: gray;
+  color: white;
+}
+
+</style>
 </head>
 
 <body>
 
-<h1>🔥 Motivation App</h1>
+<!-- HOME -->
+<div id="home">
+  <h1>🔥 Motivation App</h1>
 
-<div class="container">
+  <button class="btn trading" onclick="start('Trading')">📈 Trading</button>
+  <button class="btn general" onclick="start('General')">💪 General</button>
+  <button class="btn spiritual" onclick="start('Spiritual')">🧘 Spiritual</button>
+</div>
 
-  <button class="btn trading" onclick="setCategory('Trading')">
-    📈 Trading Motivation
-  </button>
+<!-- QUOTE SCREEN -->
+<div id="quoteScreen">
+  <h2 id="title"></h2>
 
-  <button class="btn general" onclick="setCategory('General')">
-    💪 General Motivation
-  </button>
+  <div id="quoteBox">Loading...</div>
 
-  <button class="btn spiritual" onclick="setCategory('Spiritual')">
-    🧘 Spiritual Thoughts
-  </button>
-
-  <div id="quoteBox">
-    Tap any button to get motivation 🚀
-  </div>
-
-  <button class="next-btn" onclick="getQuote()">
-    🔁 Next Quote
-  </button>
-
+  <button class="next-btn" onclick="getQuote()">🔁 Next Quote</button>
+  <button class="back-btn" onclick="goBack()">⬅ Back</button>
 </div>
 
 <script>
@@ -107,26 +99,30 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxPC4MKX2EohnSOZDo58uOP
 
 let currentCategory = "";
 
-function setCategory(category) {
+// start category
+function start(category) {
   currentCategory = category;
+
+  document.getElementById("home").style.display = "none";
+  document.getElementById("quoteScreen").style.display = "block";
+  document.getElementById("title").innerText = category;
+
   getQuote();
 }
 
+// fetch quote
 function getQuote() {
-  if (!currentCategory) {
-    document.getElementById("quoteBox").innerText = "Please select category first!";
-    return;
-  }
-
   fetch(`${API_URL}?sheet=${currentCategory}`)
     .then(res => res.json())
     .then(data => {
       document.getElementById("quoteBox").innerText = data.quote;
-    })
-    .catch(err => {
-      document.getElementById("quoteBox").innerText = "Error loading quote!";
-      console.error(err);
     });
+}
+
+// back to home
+function goBack() {
+  document.getElementById("home").style.display = "block";
+  document.getElementById("quoteScreen").style.display = "none";
 }
 </script>
 
