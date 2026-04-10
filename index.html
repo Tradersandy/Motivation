@@ -30,7 +30,7 @@ body {
 
 .trading { background: orange; }
 .general { background: green; }
-.spiritual { background: yellow; }
+.spiritual { background: #facc15; color: black; }
 
 /* QUOTE SCREEN */
 #quoteScreen {
@@ -69,7 +69,6 @@ body {
   background: gray;
   color: white;
 }
-
 </style>
 </head>
 
@@ -99,9 +98,17 @@ const API_URL = "https://script.google.com/macros/s/AKfycbxPC4MKX2EohnSOZDo58uOP
 
 let currentCategory = "";
 
+/* 🔥 NEW VARIABLES */
+let quotesList = [];
+let currentIndex = 0;
+
 // start category
 function start(category) {
   currentCategory = category;
+
+  /* 🔥 RESET */
+  quotesList = [];
+  currentIndex = 0;
 
   document.getElementById("home").style.display = "none";
   document.getElementById("quoteScreen").style.display = "block";
@@ -110,13 +117,28 @@ function start(category) {
   getQuote();
 }
 
-// fetch quote
-function getQuote() {
-  fetch(`${API_URL}?sheet=${currentCategory}`)
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("quoteBox").innerText = data.quote;
-    });
+/* 🔥 UPDATED FUNCTION (NO REPEAT SYSTEM) */
+async function getQuote() {
+
+  if (quotesList.length === 0) {
+    let res = await fetch(`${API_URL}?sheet=${currentCategory}&all=true`);
+    let data = await res.json();
+
+    quotesList = data.quotes;
+
+    // shuffle
+    quotesList.sort(() => Math.random() - 0.5);
+    currentIndex = 0;
+  }
+
+  document.getElementById("quoteBox").innerText = quotesList[currentIndex];
+
+  currentIndex++;
+
+  if (currentIndex >= quotesList.length) {
+    quotesList.sort(() => Math.random() - 0.5);
+    currentIndex = 0;
+  }
 }
 
 // back to home
